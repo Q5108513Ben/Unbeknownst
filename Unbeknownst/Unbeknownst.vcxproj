@@ -21,12 +21,25 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StateMachine\stateMachine.cpp" />
-    <ClCompile Include="src\StateMachine\States\titleScreen.cpp" />
+    <ClCompile Include="src\StateMachine\States\TitleScreen.cpp" />
+    <ClCompile Include="src\Managers\uiManager.cpp" />
+    <ClCompile Include="src\UUI\Elements\Button.cpp" />
+    <ClCompile Include="src\UUI\Elements\Sprite.cpp" />
+    <ClCompile Include="src\UUI\Elements\Texture.cpp" />
+    <ClCompile Include="src\UUI\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\UUI\Additional\Themes.hpp" />
+    <ClInclude Include="include\UUI\Elements\Button.hpp" />
+    <ClInclude Include="include\UUI\Elements\Sprite.hpp" />
+    <ClInclude Include="include\UUI\Additional\Position.hpp" />
     <ClInclude Include="include\StateMachine\stateMachine.hpp" />
-    <ClInclude Include="include\StateMachine\States\titleScreen.hpp" />
+    <ClInclude Include="include\StateMachine\States\TitleScreen.hpp" />
     <ClInclude Include="include\StateMachine\virtualState.hpp" />
+    <ClInclude Include="include\Managers\uiManager.hpp" />
+    <ClInclude Include="include\UUI\ResourceManager.hpp" />
+    <ClInclude Include="include\UUI\Elements\Texture.hpp" />
+    <ClInclude Include="include\UUI\UUI.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5cece427-55f9-439c-a2fb-f2e55c4596f1}</ProjectGuid>

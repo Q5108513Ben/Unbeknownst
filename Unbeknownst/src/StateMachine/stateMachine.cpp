@@ -1,8 +1,9 @@
 #include "StateMachine\stateMachine.hpp"
 #include "StateMachine\virtualState.hpp"
+#include "Managers\uiManager.hpp"
 
-StateMachine::StateMachine() : window(sf::VideoMode(1020, 675), "Unbeknownst"),
-gui(window) {
+StateMachine::StateMachine() : window(sf::VideoMode(1440, 810), "Unbeknownst", sf::Style::None),
+							   gui(window) {
 	windowPtr = &window;
 	guiPtr = &gui;
 	this->Initialise();
@@ -10,6 +11,7 @@ gui(window) {
 
 void StateMachine::Initialise() {
 	isRunning = true;
+	UIManager::Instance()->LoadBaseUI(windowPtr, guiPtr, this);
 }
 
 void StateMachine::CleanUp() {
@@ -83,6 +85,7 @@ void StateMachine::Update() {
 void StateMachine::Render() {
 	window.clear();
 
+	UIManager::Instance()->Render();
 	currentState->Render(this);
 	gui.draw();
 	window.display();

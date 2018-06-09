@@ -1,0 +1,8 @@
+Button {
+	NormalImage	: "TitleScreen_Theme.png" Part( 2,  2, 60,  7);
+	HoverImage	: "TitleScreen_Theme.png" Part( 2, 11, 60,  7);
+	DownImage	: "TitleScreen_Theme.png" Part( 2, 11, 60,  7);
+	TextColorNormal : rgb(204, 204, 204);
+	TextColorHover	: rgb( 51,  51,  51);
+	TextColorDown	: rgb( 51,  51,  51);
+}

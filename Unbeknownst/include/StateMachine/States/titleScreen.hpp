@@ -28,4 +28,13 @@ class TitleScreenState : public State {
 		sf::RenderWindow* windowRef{ nullptr };
 		tgui::Gui* guiRef{ nullptr };
 
+		std::vector<sf::Sprite> spriteVector;
+		std::vector<sf::Text> textVector;
+
+		void buttonFocused(unsigned int index);
+		void buttonUnfocused(unsigned int index);
+		void buttonClicked();
+
+		void CreateSprite(std::string fileName);
+		void CreateButtons();
 };
