@@ -6,36 +6,41 @@
 class State;
 class StateMachine {
 
-	public:
+public:
 
-		StateMachine();
-		~StateMachine() {};
+	StateMachine();
+	~StateMachine() {};
 
-		void Initialise();
-		void CleanUp();
-		void PushState(State* state);
-		void SwitchState(State* state);
-		void PopState();
+	void Initialise();
+	void CleanUp();
+	void PushState(State* state);
+	void SwitchState(State* state);
+	void PopState();
 
-		void HandleEvents();
-		void Update();
-		void Render();
+	void HandleEvents();
+	void Update();
+	void Render();
 
-		bool Running() { return isRunning; }
-		void Quit();
+	void UpdateFPS(unsigned int frameRate);
 
-	private:
+	bool Running() { return isRunning; }
+	void Quit();
 
-		std::vector<State*> states;
-		State* currentState{ nullptr };
-		State* previousState{ nullptr };
+private:
 
-		sf::RenderWindow window;
-		sf::RenderWindow* windowPtr{ nullptr };
-		tgui::Gui gui;
-		tgui::Gui* guiPtr{ nullptr };
+	std::vector<State*> states;
+	State* currentState{ nullptr };
+	State* previousState{ nullptr };
 
-		bool isRunning{ false };
-		bool CheckState(State* state);
+	sf::RenderWindow window;
+	sf::RenderWindow* windowPtr{ nullptr };
+	tgui::Gui gui;
+	tgui::Gui* guiPtr{ nullptr };
+
+	bool isRunning{ false };
+	bool CheckState(State* state);
+
+	sf::Text fps;
+	bool showFPS{ false };
 
 };

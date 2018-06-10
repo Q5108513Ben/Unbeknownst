@@ -1,5 +1,6 @@
 #include "StateMachine\stateMachine.hpp"
 #include "StateMachine\virtualState.hpp"
+#include "UUI\ResourceManager.hpp"
 #include "Managers\uiManager.hpp"
 
 StateMachine::StateMachine() : window(sf::VideoMode(1440, 810), "Unbeknownst", sf::Style::None),
@@ -12,6 +13,13 @@ StateMachine::StateMachine() : window(sf::VideoMode(1440, 810), "Unbeknownst", s
 void StateMachine::Initialise() {
 	isRunning = true;
 	UIManager::Instance()->LoadBaseUI(windowPtr, guiPtr, this);
+
+	fps.setFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
+	fps.setCharacterSize(24);
+	fps.setFillColor(sf::Color(51, 51, 51));
+	fps.setPosition(12, 0);
+	fps.setString(" ");
+
 }
 
 void StateMachine::CleanUp() {
@@ -73,6 +81,11 @@ void StateMachine::PopState() {
 void StateMachine::HandleEvents() {
 	sf::Event event;
 	while (window.pollEvent(event)) {
+
+		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F11) {
+			(showFPS) ? showFPS = false : showFPS = true;
+		}
+
 		currentState->HandleEvent(this, event);
 		gui.handleEvent(event);
 	}
@@ -88,10 +101,14 @@ void StateMachine::Render() {
 	UIManager::Instance()->Render();
 	currentState->Render(this);
 	gui.draw();
+
+	if (showFPS) { window.draw(fps); }
+
 	window.display();
 }
 
 void StateMachine::Quit() {
+	CleanUp();
 	isRunning = false;
 	window.close();
 }
@@ -112,4 +129,10 @@ bool StateMachine::CheckState(State* state) {
 	}
 
 	return false;
+}
+
+void StateMachine::UpdateFPS(unsigned int frameRate) {
+	std::ostringstream ss;
+	ss << frameRate;
+	fps.setString(ss.str());
 }

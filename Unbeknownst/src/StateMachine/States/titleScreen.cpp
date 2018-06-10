@@ -25,12 +25,38 @@ void TitleScreenState::Resume() {
 
 }
 
-void TitleScreenState::HandleEvent(StateMachine* machine, sf::Event event) {
+void TitleScreenState::HandleEvent(StateMachine* machine, sf::Event sfEvent) {
 
+	switch (sfEvent.type) {
+
+	case sf::Event::KeyReleased: 
+
+			switch (sfEvent.key.code) {
+
+			case sf::Keyboard::Escape:
+				machine->Quit();
+				break;
+
+			case sf::Keyboard::S:
+				
+				break;
+			}
+
+			if (isFocusingButton) {
+				if (sfEvent.key.code == sf::Keyboard::Return) {
+					std::cout << "Pressed button: " << currentlyFocusedButton << std::endl;
+				}
+			}
+			
+		break;
+	}
 }
 
 void TitleScreenState::Update(StateMachine* machine) {
-
+	if (isFocusingButton) {
+		std::cout << currentlyFocusedButton << std::endl;
+	}
+	
 }
 
 void TitleScreenState::Render(StateMachine* machine) {
@@ -45,14 +71,23 @@ void TitleScreenState::Render(StateMachine* machine) {
 	}
 }
 
-void TitleScreenState::buttonFocused(unsigned int index) {
-	textVector[index].setFillColor(sf::Color(51, 51, 51));
-	textVector[index].move(9, 0);
+void TitleScreenState::buttonFocused(unsigned int textIndex, unsigned int buttonID) {
+	if (isFocusingButton && currentlyFocusedButton == buttonID) {
+		return;
+	}
+	
+	textVector[textIndex].setFillColor(sf::Color(51, 51, 51));
+	textVector[textIndex].move(9, 0);
+
+	isFocusingButton = true;
+	currentlyFocusedButton = buttonID;
 }
 
-void TitleScreenState::buttonUnfocused(unsigned int index) {
-	textVector[index].setFillColor(sf::Color(204, 204, 204));
-	textVector[index].move(-9, 0);
+void TitleScreenState::buttonUnfocused(unsigned int textIndex) {
+	textVector[textIndex].setFillColor(sf::Color(204, 204, 204));
+	textVector[textIndex].move(-9, 0);
+
+	isFocusingButton = false;
 }
 
 void TitleScreenState::buttonClicked() {
@@ -69,66 +104,66 @@ void TitleScreenState::CreateSprite(std::string fileName) {
 void TitleScreenState::CreateButtons() {
 	// New Game Button
 
-	uui::Button newgameButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 666), "New Game", uui::Position(72, 660));
+	uui::Button newgameButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 663), "New Game", uui::Position(72, 657));
 	newgameButton.setTextFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
 	newgameButton.setTextColour(sf::Color(204, 204, 204));
 
-	newgameButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 0);
+	newgameButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 0, 0);
 	newgameButton.getButton()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen, 0);
 	newgameButton.getButton()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
 
-	guiRef->add(newgameButton.getButton(), "New Game");
+	guiRef->add(newgameButton.getButton(), "Button0");
 	textVector.push_back(newgameButton.getText());
 
 	// Continue Button
 
-	uui::Button continueButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 687), "Continue", uui::Position(72, 681));
+	uui::Button continueButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 684), "Continue", uui::Position(72, 678));
 	continueButton.setTextFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
 	continueButton.setTextColour(sf::Color(204, 204, 204));
 
-	continueButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 1);
+	continueButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 1, 1);
 	continueButton.getButton()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen, 1);
 	continueButton.getButton()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
 
-	guiRef->add(continueButton.getButton(), "Continue");
+	guiRef->add(continueButton.getButton(), "Button1");
 	textVector.push_back(continueButton.getText());
 
 	// Load Game Button
 
-	uui::Button loadgameButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 708), "Load Game", uui::Position(72, 702));
+	uui::Button loadgameButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 705), "Load Game", uui::Position(72, 699));
 	loadgameButton.setTextFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
 	loadgameButton.setTextColour(sf::Color(204, 204, 204));
 
-	loadgameButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 2);
+	loadgameButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 2, 2);
 	loadgameButton.getButton()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen, 2);
 	loadgameButton.getButton()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
 
-	guiRef->add(loadgameButton.getButton(), "Load Game");
+	guiRef->add(loadgameButton.getButton(), "Button2");
 	textVector.push_back(loadgameButton.getText());
 
 	// Extras Button
 
-	uui::Button extrasButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 729), "Extras", uui::Position(72, 723));
+	uui::Button extrasButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 726), "Extras", uui::Position(72, 720));
 	extrasButton.setTextFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
 	extrasButton.setTextColour(sf::Color(204, 204, 204));
 
-	extrasButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 3);
+	extrasButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 3, 3);
 	extrasButton.getButton()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen, 3);
 	extrasButton.getButton()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
 
-	guiRef->add(extrasButton.getButton(), "Extras");
+	guiRef->add(extrasButton.getButton(), "Button3");
 	textVector.push_back(extrasButton.getText());
 
 	// Options Button
 
-	uui::Button optionsButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 750), "Options", uui::Position(72, 744));
+	uui::Button optionsButton(uui::ResourceManager::Instance()->getTheme("TitleScreen"), uui::Position(54, 747), "Options", uui::Position(72, 741));
 	optionsButton.setTextFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
 	optionsButton.setTextColour(sf::Color(204, 204, 204));
 
-	optionsButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 4);
+	optionsButton.getButton()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, 4, 4);
 	optionsButton.getButton()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen, 4);
 	optionsButton.getButton()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
 
-	guiRef->add(optionsButton.getButton(), "Options");
+	guiRef->add(optionsButton.getButton(), "Button4");
 	textVector.push_back(optionsButton.getText());
 }
