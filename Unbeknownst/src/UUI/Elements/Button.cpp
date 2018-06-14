@@ -1,43 +1,34 @@
 #include "UUI\Elements\Button.hpp"
+#include "UUI\ResourceManager.hpp"
 
 namespace uui {
 
-	Button::Button(tgui::Theme::Ptr theme) {
-		tguiButton = theme->load("Button");
-		tguiButton->scale(3, 3);
-	}
-
-	Button::Button(tgui::Theme::Ptr theme, Position buttonPosition) {
-		tguiButton = theme->load("Button");
-		tguiButton->setPosition(buttonPosition.x, buttonPosition.y);
-		tguiButton->scale(3, 3);
-	}
-
-	Button::Button(tgui::Theme::Ptr theme, Position buttonPosition, std::string text, Position textPosition) {
-		tguiButton = theme->load("Button");
-		tguiButton->setPosition(buttonPosition.x, buttonPosition.y);
-		tguiButton->scale(3, 3);
+	sf::Text TitleScreenButton::create(Position buttonPosition, std::string text, Position textPosition) {
+		tguiPicture = tguiPicture->create(uui::ResourceManager::Instance()->getTexture("ButtonNormal"));
+		tguiPicture->setPosition(buttonPosition.x, buttonPosition.y);
+		tguiPicture->scale(3, 3);
 		
-		sfText.setString(text); 
-		sfText.setCharacterSize(24);
+		sf::Text sfText;
+
+		sfText.setFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
 		sfText.setPosition((float)textPosition.x, (float)textPosition.y);
+		sfText.setCharacterSize(24);
+		sfText.setFillColor(sf::Color(204, 204, 204));
+		sfText.setString(text); 
+		
+		return sfText;
 	}
 
-	void Button::setButton(const tgui::Button::Ptr& button) {
-		tguiButton = button;
+	void TitleScreenButton::setLinkedButtons(std::string up, std::string down, std::string left, std::string right) {
+		nextButtonU = up;
+		nextButtonD = down;
+		nextButtonL = left;
+		nextButtonR = right;
 	}
 
-	void Button::setText(const std::string& text) {
-		sfText.setString(text);
-	}
-
-	void Button::setTextFont(const sf::Font& font) {
-		sfText.setFont(font);
-	}
-
-	void Button::setTextColour(const sf::Color& colour) {
-
-		sfText.setFillColor(colour);
+	void TitleScreenButton::setIndex(unsigned int textIndex, unsigned int buttonIndex) {
+		textID = textIndex;
+		buttonID = buttonIndex;
 	}
 
 }

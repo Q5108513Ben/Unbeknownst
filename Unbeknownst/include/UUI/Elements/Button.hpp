@@ -5,29 +5,46 @@
 
 namespace uui {
 
-	class Button {
+	class TitleScreenButton {
 			
 		public:
 
-			Button() {};
-			Button(tgui::Theme::Ptr theme);
-			Button(tgui::Theme::Ptr theme, Position buttonPosition);
-			Button(tgui::Theme::Ptr theme, Position buttonPosition, std::string text, Position textPosition);
-			
-			void setButton(const tgui::Button::Ptr& button);
+			TitleScreenButton() {}
+			sf::Text create(Position buttonPosition, std::string text, Position textPosition);
 
-			void setText(const std::string& text);
-			void setTextFont(const sf::Font& font);
-			void setTextColour(const sf::Color& colour);
+			const tgui::Picture::Ptr getPicture() { return tguiPicture; }
 
-			const tgui::Button::Ptr getButton() { return tguiButton; }
-			const sf::Text& getText() { return sfText; }
+			const unsigned int& getTextID() { return textID; }
+			const unsigned int& getButtonID() { return buttonID; }
+
+			const std::string& getNextUp() { return nextButtonU; }
+			const std::string& getNextDown() { return nextButtonD; }
+			const std::string& getNextLeft() { return nextButtonL; }
+			const std::string& getNextRight() { return nextButtonR; }
+
+			void setLinkedButtons(std::string up, std::string down, std::string left, std::string right);
+			void setIndex(unsigned int textIndex, unsigned int buttonIndex);
 
 		private:
 
-			tgui::Button::Ptr tguiButton;
-			sf::Text sfText;
+			std::string nextButtonU{ " " };
+			std::string nextButtonD{ " " };
+			std::string nextButtonL{ " " };
+			std::string nextButtonR{ " " };
+			
+			tgui::Picture::Ptr tguiPicture;
+
+			unsigned int textID{ 0 };
+			unsigned int buttonID{ 0 };
 
 	};
 
 }
+
+// Rework is almost complete, the mouse events are working as intended. Now I just need to 
+// create functions in the TitleScreenState that handle keyboard events, this is where the 
+// nextButton strings come into play as we can get the button we have selected through the 
+// vector by using the currentlySelectedButton id. 
+// Once we have the button we can get it's Up Down Left and Right strings that can be used
+// here GuiRef->get(string) to alter the new button we want to select. The Text ID is the same
+// as the Button ID so that shouldn't be a problem when altering the text.

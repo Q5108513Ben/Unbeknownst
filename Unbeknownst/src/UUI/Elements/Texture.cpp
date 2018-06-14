@@ -11,4 +11,13 @@ namespace uui {
 		return sfTexture;
 	}
 
+	sf::Texture Texture::create(const sf::Image& image, sf::IntRect rect) {
+		sf::Texture sfTexture;
+		if (!sfTexture.loadFromImage(image, rect)) {
+			std::cout << "Failed to load texture from coordinates" << std::endl;
+		}
+
+		return sfTexture;
+	}
+
 }
