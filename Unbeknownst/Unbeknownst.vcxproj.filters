@@ -39,6 +39,12 @@
     <ClCompile Include="src\UUI\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\StateMachine\States\GameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StateMachine\States\Options.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\StateMachine\stateMachine.hpp">
@@ -72,6 +78,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\StateMachine\States\TitleScreen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StateMachine\States\GameState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StateMachine\States\Options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,13 +6,13 @@ class State {
 
 	public:
 
-		virtual void Initialise(sf::RenderWindow* window, tgui::Gui* gui) = 0;
+		virtual void Initialise(sf::RenderWindow* window, tgui::Gui* gui, StateMachine* machine) = 0;
 		virtual void CleanUp() = 0;
 		virtual void Pause() = 0;
 		virtual void Resume() = 0;
 		virtual void HandleEvent(StateMachine* machine, sf::Event event) = 0;
 		virtual void Update(StateMachine* machine) = 0;
-		virtual void Render(StateMachine* machine) = 0;
+		virtual void Render() = 0;
 
 	protected:
 

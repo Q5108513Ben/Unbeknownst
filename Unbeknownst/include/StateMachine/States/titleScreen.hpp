@@ -5,9 +5,17 @@
 
 class TitleScreenState : public State {
 
+	private:
+
+		enum SubState {
+			LoadGame,
+			Extras,
+			Options
+		};
+
 	public:
 
-		void Initialise(sf::RenderWindow* window, tgui::Gui* gui);
+		void Initialise(sf::RenderWindow* window, tgui::Gui* gui, StateMachine* machine);
 		void CleanUp();
 
 		void Pause();
@@ -15,7 +23,7 @@ class TitleScreenState : public State {
 
 		void HandleEvent(StateMachine* machine, sf::Event event);
 		void Update(StateMachine* machine);
-		void Render(StateMachine* machine);
+		void Render();
 
 		static TitleScreenState* Instance() { return &titleScreen; }
 
@@ -40,10 +48,15 @@ class TitleScreenState : public State {
 
 		void buttonFocused(std::string buttonName);
 		void buttonUnfocused();
-		void buttonClicked();
+		void buttonClicked(StateMachine* machine);
 
 		void changeSelectedButton(unsigned int direction);
 
+		bool subStateSelected{ false };
+		SubState currentlySelectedSubState{};
+		void changeSubState(SubState state);
+		void removeSubState();
+
 		void CreateSprite(std::string fileName);
-		void CreateButtons();
+		void CreateButtons(StateMachine* machine);
 };

@@ -44,7 +44,7 @@ void StateMachine::PushState(State* state) {
 	}
 
 	states.push_back(state);
-	states.back()->Initialise(windowPtr, guiPtr);
+	states.back()->Initialise(windowPtr, guiPtr, this);
 	currentState = state;
 }
 
@@ -99,7 +99,7 @@ void StateMachine::Render() {
 	window.clear();
 
 	UIManager::Instance()->Render();
-	currentState->Render(this);
+	currentState->Render();
 	gui.draw();
 
 	if (showFPS) { window.draw(fps); }

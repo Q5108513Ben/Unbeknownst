@@ -1,9 +1,11 @@
 #include "StateMachine\States\TitleScreen.hpp"
+#include "StateMachine\States\GameState.hpp"
+#include "StateMachine\States\Options.hpp"
 #include "UUI\Additional\Position.hpp"
 
 TitleScreenState TitleScreenState::titleScreen;
 
-void TitleScreenState::Initialise(sf::RenderWindow* window, tgui::Gui* gui) {
+void TitleScreenState::Initialise(sf::RenderWindow* window, tgui::Gui* gui, StateMachine* machine) {
 	windowRef = window;
 	guiRef = gui;
 
@@ -16,7 +18,7 @@ void TitleScreenState::Initialise(sf::RenderWindow* window, tgui::Gui* gui) {
 	sf::Texture buttonHover = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 11, 55, 7));
 	uui::ResourceManager::Instance()->addTexture("ButtonHover", buttonHover);
 
-	CreateButtons();
+	CreateButtons(machine);
 
 }
 
@@ -25,69 +27,110 @@ void TitleScreenState::CleanUp() {
 }
 
 void TitleScreenState::Pause() {
-
+	guiRef->get("NewGameButton")->hide();
+	guiRef->get("ContinueButton")->hide();
+	guiRef->get("LoadGameButton")->hide();
+	guiRef->get("ExtrasButton")->hide();
+	guiRef->get("OptionsButton")->hide();
 }
 
 void TitleScreenState::Resume() {
-
+	guiRef->get("NewGameButton")->show();
+	guiRef->get("ContinueButton")->show();
+	guiRef->get("LoadGameButton")->show();
+	guiRef->get("ExtrasButton")->show();
+	guiRef->get("OptionsButton")->show();
 }
 
 void TitleScreenState::HandleEvent(StateMachine* machine, sf::Event sfEvent) {
 
 	switch (sfEvent.type) {
 
-	case sf::Event::KeyReleased: 
+	case sf::Event::KeyReleased:
 
-			switch (sfEvent.key.code) {
+		switch (sfEvent.key.code) {
 
-			case sf::Keyboard::Escape:
+		case sf::Keyboard::Escape:
+			if (!subStateSelected) {
 				machine->Quit();
-				break;
+			}
+			else {
+				removeSubState();
+			}
+			break;
+		}
 
-			case sf::Keyboard::W:
+		if (!subStateSelected) {
+			if (sfEvent.key.code == sf::Keyboard::W) {
 				changeSelectedButton(0);
-				break;
+			}
 
-			case sf::Keyboard::S:
+			else if (sfEvent.key.code == sf::Keyboard::S) {
 				changeSelectedButton(1);
-				break;
+			}
 
-			case sf::Keyboard::A:
+			else if (sfEvent.key.code == sf::Keyboard::A) {
 				changeSelectedButton(2);
-				break;
+			}
 
-			case sf::Keyboard::D:
+			else if (sfEvent.key.code == sf::Keyboard::D) {
 				changeSelectedButton(3);
-				break;
-
 			}
+		}
 
-			if (isFocusingButton) {
-				if (sfEvent.key.code == sf::Keyboard::Return) {
-					std::cout << "Pressed button: " << currentlyFocusedButton << std::endl;
-				}
+		if (!subStateSelected && isFocusingButton) {
+			if (sfEvent.key.code == sf::Keyboard::Return) {
+				buttonClicked(machine);
 			}
-			
-		break;
+		}
+
+	break;
+
+	}
+
+	if (subStateSelected) {
+		switch (currentlySelectedSubState) {
+		case LoadGame:
+			break;
+		case Extras:
+			break;
+		case Options:
+			OptionsState::Instance()->HandleEvent(machine, sfEvent);
+			break;
+		}
 	}
 }
 
 void TitleScreenState::Update(StateMachine* machine) {
-	if (isFocusingButton) {
+	if (!subStateSelected && isFocusingButton ) {
 		std::cout << currentlyFocusedButton << std::endl;
 	}
 	
 }
 
-void TitleScreenState::Render(StateMachine* machine) {
+void TitleScreenState::Render() {
 	
 	for (auto sprite : spriteVector) {
 		sprite.scale(3, 3);
 		windowRef->draw(sprite);
 	}
 
-	for (auto text : textVector) {
-		windowRef->draw(text);
+	if (!subStateSelected) {
+		for (auto text : textVector) {
+			windowRef->draw(text);
+		}
+	}
+	else {
+
+		switch (currentlySelectedSubState) {
+		case LoadGame:
+			break;
+		case Extras:
+			break;
+		case Options:
+			OptionsState::Instance()->Render();
+			break;
+		}
 	}
 }
 
@@ -118,8 +161,22 @@ void TitleScreenState::buttonUnfocused() {
 	isFocusingButton = false;
 }
 
-void TitleScreenState::buttonClicked() {
-	std::cout << "Button Clicked";
+void TitleScreenState::buttonClicked(StateMachine* machine) {
+	if (currentlyFocusedButton == "NewGameButton") {
+		machine->PushState(GameState::Instance());
+	}
+	else if (currentlyFocusedButton == "ContinueButton") {
+		
+	}
+	else if (currentlyFocusedButton == "LoadGameButton") {
+		
+	}
+	else if (currentlyFocusedButton == "ExtrasButton") {
+		
+	}
+	else if (currentlyFocusedButton == "OptionsButton") {
+		changeSubState(SubState::Options);
+	}
 }
 
 void TitleScreenState::changeSelectedButton(unsigned int direction) {
@@ -154,6 +211,27 @@ void TitleScreenState::changeSelectedButton(unsigned int direction) {
 	}
 }
 
+void TitleScreenState::changeSubState(SubState state) {
+	subStateSelected = true;
+	Pause();
+}
+
+void TitleScreenState::removeSubState() {
+	switch (currentlySelectedSubState) {
+	case LoadGame:
+		break;
+	case Extras:
+		break;
+	case Options:
+		OptionsState::Instance()->CleanUp();
+		break;
+	}
+	
+	subStateSelected = false;
+	Resume();
+}
+
+
 
 void TitleScreenState::CreateSprite(std::string fileName) {
 	sf::Texture texture = uui::Texture::create(fileName + ".png");
@@ -162,16 +240,16 @@ void TitleScreenState::CreateSprite(std::string fileName) {
 	spriteVector.push_back(sprite);
 }
 
-void TitleScreenState::CreateButtons() {
+void TitleScreenState::CreateButtons(StateMachine* machine) {
 	// New Game Button
 
 	uui::TitleScreenButton newgameButton;
-	newgameButton.setIndex(textVector.size(), buttonMap.size());
+	newgameButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
 	textVector.push_back(newgameButton.create(uui::Position(54, 663), "New Game", uui::Position(72, 657)));
 
 	newgameButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "NewGameButton");
 	newgameButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
-	newgameButton.getPicture()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
+	newgameButton.getPicture()->connect("Clicked", [=]() { machine->PushState(GameState::Instance()); });
 	newgameButton.setLinkedButtons("OptionsButton", "ContinueButton", " ", " ");
 
 	guiRef->add(newgameButton.getPicture(), "NewGameButton");
@@ -180,12 +258,12 @@ void TitleScreenState::CreateButtons() {
 	// Continue Button
 
 	uui::TitleScreenButton continueButton;
-	continueButton.setIndex(textVector.size(), buttonMap.size());
+	continueButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
 	textVector.push_back(continueButton.create(uui::Position(54, 684), "Continue", uui::Position(72, 678)));
 
 	continueButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "ContinueButton");
 	continueButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
-	continueButton.getPicture()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
+	continueButton.getPicture()->connect("Clicked", [=]() { machine->PushState(GameState::Instance()); });
 	continueButton.setLinkedButtons("NewGameButton", "LoadGameButton", " ", " ");
 
 	guiRef->add(continueButton.getPicture(), "ContinueButton");
@@ -194,12 +272,12 @@ void TitleScreenState::CreateButtons() {
 	// Load Game Button
 
 	uui::TitleScreenButton loadgameButton;
-	loadgameButton.setIndex(textVector.size(), buttonMap.size());
+	loadgameButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
 	textVector.push_back(loadgameButton.create(uui::Position(54, 705), "Load Game", uui::Position(72, 699)));
 
 	loadgameButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "LoadGameButton");
 	loadgameButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
-	loadgameButton.getPicture()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
+	loadgameButton.getPicture()->connect("Clicked", [=]() { machine->PushState(GameState::Instance()); });
 	loadgameButton.setLinkedButtons("ContinueButton", "ExtrasButton", " ", " ");
 
 	guiRef->add(loadgameButton.getPicture(), "LoadGameButton");
@@ -208,12 +286,12 @@ void TitleScreenState::CreateButtons() {
 	// Extras Button
 
 	uui::TitleScreenButton extrasButton;
-	extrasButton.setIndex(textVector.size(), buttonMap.size());
+	extrasButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
 	textVector.push_back(extrasButton.create(uui::Position(54, 726), "Extras", uui::Position(72, 720)));
 
 	extrasButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "ExtrasButton");
 	extrasButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
-	extrasButton.getPicture()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
+	extrasButton.getPicture()->connect("Clicked", [=]() { machine->PushState(GameState::Instance()); });
 	extrasButton.setLinkedButtons("LoadGameButton", "OptionsButton", " ", " ");
 
 	guiRef->add(extrasButton.getPicture(), "ExtrasButton");
@@ -222,12 +300,12 @@ void TitleScreenState::CreateButtons() {
 	// Options Button
 
 	uui::TitleScreenButton optionsButton;
-	optionsButton.setIndex(textVector.size(), buttonMap.size());
+	optionsButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
 	textVector.push_back(optionsButton.create(uui::Position(54, 747), "Options", uui::Position(72, 741)));
 
 	optionsButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "OptionsButton");
 	optionsButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
-	optionsButton.getPicture()->connect("Clicked", &TitleScreenState::buttonClicked, &titleScreen);
+	optionsButton.getPicture()->connect("Clicked", &TitleScreenState::changeSubState, &titleScreen, SubState::Options);
 	optionsButton.setLinkedButtons("ExtrasButton", "NewGameButton", " ", " ");
 
 	guiRef->add(optionsButton.getPicture(), "OptionsButton");

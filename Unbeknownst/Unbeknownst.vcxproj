@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StateMachine\stateMachine.cpp" />
+    <ClCompile Include="src\StateMachine\States\GameState.cpp" />
+    <ClCompile Include="src\StateMachine\States\Options.cpp" />
     <ClCompile Include="src\StateMachine\States\TitleScreen.cpp" />
     <ClCompile Include="src\Managers\uiManager.cpp" />
     <ClCompile Include="src\UUI\Elements\Button.cpp" />
@@ -29,6 +31,8 @@
     <ClCompile Include="src\UUI\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\StateMachine\States\GameState.hpp" />
+    <ClInclude Include="include\StateMachine\States\Options.hpp" />
     <ClInclude Include="include\UUI\Additional\Themes.hpp" />
     <ClInclude Include="include\UUI\Elements\Button.hpp" />
     <ClInclude Include="include\UUI\Elements\Sprite.hpp" />
