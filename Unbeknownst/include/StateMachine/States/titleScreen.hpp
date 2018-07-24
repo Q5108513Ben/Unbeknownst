@@ -33,15 +33,21 @@ class TitleScreenState : public State {
 
 	private:
 
+		// References
+
 		static TitleScreenState titleScreen;
 		sf::RenderWindow* windowRef{ nullptr };
 		tgui::Gui* guiRef{ nullptr };
 
 		sf::Image titleScreenWidgets;
 
+		// Stored Data
+
 		std::vector<sf::Sprite> spriteVector;
 		std::vector<sf::Text> textVector;
 		std::unordered_map<std::string, uui::TitleScreenButton> buttonMap;
+
+		// Button functionality
 
 		bool isFocusingButton{ false };
 		std::string currentlyFocusedButton{ " " };
@@ -52,10 +58,14 @@ class TitleScreenState : public State {
 
 		void changeSelectedButton(unsigned int direction);
 
+		// Sub-state functionality
+
 		bool subStateSelected{ false };
 		SubState currentlySelectedSubState{};
 		void changeSubState(SubState state);
 		void removeSubState();
+
+		// Misc functions
 
 		void CreateSprite(std::string fileName);
 		void CreateButtons(StateMachine* machine);

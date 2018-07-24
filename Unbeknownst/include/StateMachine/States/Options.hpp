@@ -2,6 +2,7 @@
 
 #include "TitleScreen.hpp"
 #include "UUI\UUI.hpp"
+#include "tinyxml2.h"
 
 class OptionsState {
 
@@ -25,12 +26,38 @@ class OptionsState {
 
 	private:
 
+		// References
+
 		static OptionsState optionsState;
 		sf::RenderWindow* windowRef{ nullptr };
 		tgui::Gui* guiRef{ nullptr };
 
+		// Stored data
+
 		std::vector<sf::Sprite> spriteVector;
 		std::vector<sf::Text> textVector;
+		std::unordered_map<std::string, uui::TitleScreenButton> buttonMap;
+
+		// Button functionality
 
 		void CreateButtons();
+
+		bool isFocusingButton{ false };
+		std::string currentlyFocusedButton{ " " };
+
+		void buttonFocused(std::string buttonName);
+		void buttonUnfocused();
+		void buttonClicked();
+
+		void changeSelectedButton(unsigned int direction);
+
+		// Key Binds Menu
+
+		void CreateKeyBindsMenu();
+
+		sf::RectangleShape test;
+
+		bool isMenuOpen{ false };
+		sf::View menuView;
+		
 };

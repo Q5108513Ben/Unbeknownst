@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+  <Key>
+    <Action>Move - Up</Action>
+    <InputType>KeyboardInput</InputType>
+    <KeyCode>sf::Keyboard::W</KeyCode>
+  </Key>
+  <Key>
+    <Action>Move - Down</Action>
+    <InputType>KeyboardInput</InputType>
+    <KeyCode>sf::Keyboard::S</KeyCode>
+  </Key>
+  <Key>
+    <Action>Move - Left</Action>
+    <InputType>KeyboardInput</InputType>
+    <KeyCode>sf::Keyboard::A</KeyCode>
+  </Key>
+  <Key>
+    <Action>Move - Right</Action>
+    <InputType>KeyboardInput</InputType>
+    <KeyCode>sf::Keyboard::D</KeyCode>
+  </Key>
+  <Key>
+    <Action>Interact</Action>
+    <InputType>KeyboardInput</InputType>
+    <KeyCode>sf::Keyboard::Q</KeyCode>
+  </Key>
+</Root>

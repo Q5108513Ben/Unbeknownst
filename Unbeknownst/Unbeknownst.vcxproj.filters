@@ -45,6 +45,12 @@
     <ClCompile Include="src\StateMachine\States\Options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="external\TinyXML2\tinyxml2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XML\KeyBindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\StateMachine\stateMachine.hpp">
@@ -86,5 +92,17 @@
     <ClInclude Include="include\StateMachine\States\Options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="external\TinyXML2\tinyxml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\XML\KeyInput.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\XML\KeyBindings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="data\KeyBindings.xml" />
   </ItemGroup>
 </Project>

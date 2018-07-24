@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="external\TinyXML2\tinyxml2.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StateMachine\stateMachine.cpp" />
     <ClCompile Include="src\StateMachine\States\GameState.cpp" />
@@ -29,8 +30,10 @@
     <ClCompile Include="src\UUI\Elements\Sprite.cpp" />
     <ClCompile Include="src\UUI\Elements\Texture.cpp" />
     <ClCompile Include="src\UUI\ResourceManager.cpp" />
+    <ClCompile Include="src\XML\KeyBindings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\TinyXML2\tinyxml2.h" />
     <ClInclude Include="include\StateMachine\States\GameState.hpp" />
     <ClInclude Include="include\StateMachine\States\Options.hpp" />
     <ClInclude Include="include\UUI\Additional\Themes.hpp" />
@@ -44,6 +47,13 @@
     <ClInclude Include="include\UUI\ResourceManager.hpp" />
     <ClInclude Include="include\UUI\Elements\Texture.hpp" />
     <ClInclude Include="include\UUI\UUI.hpp" />
+    <ClInclude Include="include\XML\KeyBindings.hpp" />
+    <ClInclude Include="include\XML\KeyInput.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="data\KeyBindings.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5cece427-55f9-439c-a2fb-f2e55c4596f1}</ProjectGuid>
