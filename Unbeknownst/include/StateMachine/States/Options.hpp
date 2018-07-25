@@ -6,6 +6,17 @@
 
 class OptionsState {
 
+	private:
+
+		enum Menu {
+			Gameplay,
+			Video,
+			UI,
+			Audio,
+			KeyBind,
+			Controller
+		};
+
 	public:
 
 		void Initialise(sf::RenderWindow* window, tgui::Gui* gui);
@@ -40,8 +51,6 @@ class OptionsState {
 
 		// Button functionality
 
-		void CreateButtons();
-
 		bool isFocusingButton{ false };
 		std::string currentlyFocusedButton{ " " };
 
@@ -51,13 +60,25 @@ class OptionsState {
 
 		void changeSelectedButton(unsigned int direction);
 
-		// Key Binds Menu
+		// Misc functions
 
-		void CreateKeyBindsMenu();
+		void CreateSprite(std::string fileName, uui::Position pos);
+		void CreateButtons();
 
-		sf::RectangleShape test;
+		// Menu System
 
 		bool isMenuOpen{ false };
+		Menu currentlyOpenedMenu;
+
+		void RemoveMenu();
+
 		sf::View menuView;
+
+		// Key Binds Menu
+
+		std::vector<sf::Text> textVectorKeyBind;
+		std::unordered_map<std::string, uui::TitleScreenButton> buttonMapKeyBind;
+
+		void CreateKeyBindsMenu();
 		
 };

@@ -11,7 +11,8 @@ class KeyBindings {
 
 		void InitialiseKeyBinds();
 
-		const KeyData& GetKey(std::string key) { return defaultKeyBinds[key]; }
+		const KeyData& GetKey(std::string key) { return userKeyBinds[key]; }
+		const std::vector<std::pair<std::string, KeyData>>& GetDefaultKeys() { return defaultKeyBinds; }
 
 	protected:
 		
@@ -21,8 +22,8 @@ class KeyBindings {
 
 		static KeyBindings keyBinds;
 
-		std::unordered_map<std::string, KeyData> defaultKeyBinds;
-		std::unordered_map<std::string, KeyData> customKeyBinds;
+		std::vector<std::pair<std::string, KeyData>> defaultKeyBinds;
+		std::unordered_map<std::string, KeyData> userKeyBinds;
 
 		void ParseKey(KeyData& key, std::string input, std::string keycode);
 };

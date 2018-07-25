@@ -103,6 +103,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="data\KeyBindings.xml" />
+    <Xml Include="data\defaultKeyBindings.xml" />
+    <Xml Include="data\userKeyBindings.xml" />
   </ItemGroup>
 </Project>

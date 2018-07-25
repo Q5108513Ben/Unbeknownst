@@ -9,13 +9,13 @@ void OptionsState::Initialise(sf::RenderWindow* window, tgui::Gui* gui) {
 	guiRef = gui;
 
 	CreateButtons();
-
-	test.setSize(sf::Vector2f(50, 50));
-	test.setPosition(sf::Vector2f(150, 150));
-	test.setFillColor(sf::Color(sf::Color::Black));
 }
 
 void OptionsState::CleanUp() {
+	
+	if (isMenuOpen) {
+		RemoveMenu();
+	}
 
 	buttonUnfocused();
 
@@ -59,7 +59,7 @@ void OptionsState::HandleEvent(StateMachine* machine, sf::Event sfEvent) {
 
 	if (isMenuOpen) {
 		if (sfEvent.type == sf::Event::MouseWheelScrolled) {
-			menuView.move(0, sfEvent.mouseWheelScroll.delta * 10);
+			menuView.move(0, -sfEvent.mouseWheelScroll.delta * 9);
 		}
 	}
 
@@ -81,10 +81,16 @@ void OptionsState::Render() {
 	}
 
 	if (isMenuOpen) {
+
 		windowRef->setView(menuView);
-		windowRef->draw(test);
+		
+		for (auto text : textVectorKeyBind) {
+			windowRef->draw(text);
+		}
+
 		//guiRef->setView(); // This function may allow us to set some of the GUI to render in the new view
 		// that will be scrollable.
+
 		windowRef->setView(windowRef->getDefaultView());
 	}
 
@@ -169,6 +175,27 @@ void OptionsState::changeSelectedButton(unsigned int direction) {
 	}
 }
 
+void OptionsState::CreateSprite(std::string fileName, uui::Position pos) {
+	sf::Texture texture = uui::Texture::create(fileName + ".png");
+	uui::ResourceManager::Instance()->addTexture(fileName, texture);
+	sf::Sprite sprite = uui::Sprite::create(uui::ResourceManager::Instance()->getTexture(fileName), pos);
+	spriteVector.push_back(sprite);
+}
+
+void OptionsState::RemoveMenu() {
+
+	switch (currentlyOpenedMenu) {
+	case KeyBind:
+		spriteVector.clear();
+		textVectorKeyBind.clear();
+		buttonMapKeyBind.clear();
+		break;
+	}
+
+	isMenuOpen = false;
+
+}
+
 void OptionsState::CreateButtons() {
 	// Gameplay Button
 	
@@ -239,8 +266,44 @@ void OptionsState::CreateButtons() {
 
 void OptionsState::CreateKeyBindsMenu() {
 
-	menuView.reset(sf::FloatRect(0, 0, 720, 810));
-	menuView.setViewport(sf::FloatRect(0.5f, 0, 0.5f, 1));
+	// Create the necessary sprites that will be used whilst the Key Binds menu is open, the reason we have
+	// created another std::vector to store more sprites is because some sprites / buttons etc. will need 
+	// to be rendered to a different sf::View.
+
+	CreateSprite("TitleScreen_KeyBinds", uui::Position(222 * 3, 16 * 3));
 	
+	// Setting up the view. The width and height of the view that we want is 222x221, we multiply this by
+	// the scale. The Viewport works similarly except it uses %'s rather than hard values and we also set
+	// the position of the view relative to the window here. Obviously it works on a range of 0-1 so to 
+	// get the % you just multiply by 100.
+
+	menuView.reset(sf::FloatRect(0, 0, 222 * 3, 221 * 3));
+	menuView.setViewport(sf::FloatRect(0.4771f, 0.0926f, 0.4625f, 0.8175f));
+	
+	// Drawing all the text. This text is gotten from our KeyData map and is the 'Key' to each item in the 
+	// map. The text is not going to do anything special however we need to make sure to draw() it to
+	// the view that will be used for the keybinds as we need to be able to scroll this inforamtion up
+	// and down.
+
+	float xPos{ 53 * 3 };
+	float yPosIncrement{ 0 };
+
+	for (auto key : KeyBindings::Instance()->GetDefaultKeys()) {
+
+		sf::Text sfText;
+
+		sfText.setFont(uui::ResourceManager::Instance()->getFont("UnbeknownstStnd"));
+		sfText.setCharacterSize(24);
+		sfText.setFillColor(sf::Color(204, 204, 204));
+		sfText.setString(key.first);
+		sfText.setPosition(xPos - (sfText.getLocalBounds().width / 2), yPosIncrement);
+
+		yPosIncrement += 10 * 3;
+
+		textVectorKeyBind.push_back(sfText);
+
+	}
+
 	isMenuOpen = true;
+	currentlyOpenedMenu = KeyBind;
 }

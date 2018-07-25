@@ -51,9 +51,10 @@
     <ClInclude Include="include\XML\KeyInput.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="data\KeyBindings.xml">
+    <Xml Include="data\defaultKeyBindings.xml">
       <SubType>Designer</SubType>
     </Xml>
+    <Xml Include="data\userKeyBindings.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5cece427-55f9-439c-a2fb-f2e55c4596f1}</ProjectGuid>

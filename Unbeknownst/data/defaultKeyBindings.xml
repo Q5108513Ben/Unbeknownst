@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+  <Key>
+    <Action>Move - Up</Action>
+    <InputType>Keyboard</InputType>
+    <KeyCode>W</KeyCode>
+  </Key>
+  <Key>
+    <Action>Move - Down</Action>
+    <InputType>Keyboard</InputType>
+    <KeyCode>S</KeyCode>
+  </Key>
+  <Key>
+    <Action>Move - Left</Action>
+    <InputType>Keyboard</InputType>
+    <KeyCode>A</KeyCode>
+  </Key>
+  <Key>
+    <Action>Move - Right</Action>
+    <InputType>Keyboard</InputType>
+    <KeyCode>D</KeyCode>
+  </Key>
+  <Key>
+    <Action>Interact</Action>
+    <InputType>Keyboard</InputType>
+    <KeyCode>Q</KeyCode>
+  </Key>
+</Root>
