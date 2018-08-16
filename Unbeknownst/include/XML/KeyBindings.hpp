@@ -12,6 +12,8 @@ class KeyBindings {
 		void InitialiseKeyBinds();
 
 		const KeyData& GetKey(std::string key) { return userKeyBinds[key]; }
+
+		const std::unordered_map<std::string, KeyData>& GetUserKeys() { return userKeyBinds; }
 		const std::vector<std::pair<std::string, KeyData>>& GetDefaultKeys() { return defaultKeyBinds; }
 
 	protected:

@@ -16,9 +16,7 @@ void OptionsState::CleanUp() {
 	if (isMenuOpen) {
 		RemoveMenu();
 	}
-
-	buttonUnfocused();
-
+	
 	for (auto button : buttonMap) {
 		guiRef->remove(button.second.getPicture());
 	}
@@ -26,6 +24,8 @@ void OptionsState::CleanUp() {
 	spriteVector.clear();
 	textVector.clear();
 	buttonMap.clear();
+
+	isFocusingButton = false;
 }
 
 void OptionsState::Pause() {
@@ -59,10 +59,12 @@ void OptionsState::HandleEvent(StateMachine* machine, sf::Event sfEvent) {
 
 	if (isMenuOpen) {
 		if (sfEvent.type == sf::Event::MouseWheelScrolled) {
-			menuView.move(0, -sfEvent.mouseWheelScroll.delta * 9);
+			menuView.move(0, -sfEvent.mouseWheelScroll.delta * 18);
 		}
-	}
 
+		keyBindGUI.handleEvent(sfEvent);
+
+	}
 }
 
 void OptionsState::Update(StateMachine* machine) {
@@ -82,14 +84,14 @@ void OptionsState::Render() {
 
 	if (isMenuOpen) {
 
+		keyBindGUI.setView(menuView);
+		keyBindGUI.draw();
+
 		windowRef->setView(menuView);
 		
 		for (auto text : textVectorKeyBind) {
 			windowRef->draw(text);
 		}
-
-		//guiRef->setView(); // This function may allow us to set some of the GUI to render in the new view
-		// that will be scrollable.
 
 		windowRef->setView(windowRef->getDefaultView());
 	}
@@ -105,7 +107,7 @@ void OptionsState::buttonFocused(std::string buttonName) {
 		buttonUnfocused();
 	}
 
-	guiRef->get<tgui::Picture>(buttonName)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonHover"));
+	guiRef->get<tgui::Picture>(buttonName)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonHover_TitleScreen"));
 
 	textVector[buttonMap[buttonName].getTextID()].setFillColor(sf::Color(51, 51, 51));
 	textVector[buttonMap[buttonName].getTextID()].move(9, 0);
@@ -118,7 +120,7 @@ void OptionsState::buttonUnfocused() {
 	textVector[buttonMap[currentlyFocusedButton].getTextID()].setFillColor(sf::Color(204, 204, 204));
 	textVector[buttonMap[currentlyFocusedButton].getTextID()].move(-9, 0);
 
-	guiRef->get<tgui::Picture>(currentlyFocusedButton)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonNormal"));
+	guiRef->get<tgui::Picture>(currentlyFocusedButton)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonNormal_TitleScreen"));
 
 	isFocusingButton = false;
 }
@@ -186,9 +188,18 @@ void OptionsState::RemoveMenu() {
 
 	switch (currentlyOpenedMenu) {
 	case KeyBind:
+
+		for (auto button : buttonMapKeyBind) {
+			keyBindGUI.remove(button.second.getPicture());
+		}
+
 		spriteVector.clear();
 		textVectorKeyBind.clear();
 		buttonMapKeyBind.clear();
+
+		isFocusingKeyBind = false;
+		isSelectingKeyBind = false;
+
 		break;
 	}
 
@@ -201,7 +212,7 @@ void OptionsState::CreateButtons() {
 	
 	uui::TitleScreenButton gameplayButton;
 	gameplayButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(gameplayButton.create(uui::Position(54, 663), "Gameplay", uui::Position(72, 657)));
+	textVector.push_back(gameplayButton.create(uui::Position(54, 663), "Gameplay", uui::Position(72, 657), "ButtonNormal_TitleScreen"));
 
 	gameplayButton.getPicture()->connect("MouseEntered", &OptionsState::buttonFocused, &optionsState, "GameplayButton");
 	gameplayButton.getPicture()->connect("MouseLeft", &OptionsState::buttonUnfocused, &optionsState);
@@ -214,7 +225,7 @@ void OptionsState::CreateButtons() {
 
 	uui::TitleScreenButton videoButton;
 	videoButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(videoButton.create(uui::Position(54, 684), "Video", uui::Position(72, 678)));
+	textVector.push_back(videoButton.create(uui::Position(54, 684), "Video", uui::Position(72, 678), "ButtonNormal_TitleScreen"));
 
 	videoButton.getPicture()->connect("MouseEntered", &OptionsState::buttonFocused, &optionsState, "VideoButton");
 	videoButton.getPicture()->connect("MouseLeft", &OptionsState::buttonUnfocused, &optionsState);
@@ -227,7 +238,7 @@ void OptionsState::CreateButtons() {
 
 	uui::TitleScreenButton userInterfaceButton;
 	userInterfaceButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(userInterfaceButton.create(uui::Position(54, 705), "User Interface", uui::Position(72, 699)));
+	textVector.push_back(userInterfaceButton.create(uui::Position(54, 705), "User Interface", uui::Position(72, 699), "ButtonNormal_TitleScreen"));
 
 	userInterfaceButton.getPicture()->connect("MouseEntered", &OptionsState::buttonFocused, &optionsState, "UserInterfaceButton");
 	userInterfaceButton.getPicture()->connect("MouseLeft", &OptionsState::buttonUnfocused, &optionsState);
@@ -240,7 +251,7 @@ void OptionsState::CreateButtons() {
 
 	uui::TitleScreenButton audioButton;
 	audioButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(audioButton.create(uui::Position(54, 726), "Audio", uui::Position(72, 720)));
+	textVector.push_back(audioButton.create(uui::Position(54, 726), "Audio", uui::Position(72, 720), "ButtonNormal_TitleScreen"));
 
 	audioButton.getPicture()->connect("MouseEntered", &OptionsState::buttonFocused, &optionsState, "AudioButton");
 	audioButton.getPicture()->connect("MouseLeft", &OptionsState::buttonUnfocused, &optionsState);
@@ -253,7 +264,7 @@ void OptionsState::CreateButtons() {
 
 	uui::TitleScreenButton keyBindsButton;
 	keyBindsButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(keyBindsButton.create(uui::Position(54, 747), "Key Binds", uui::Position(72, 741)));
+	textVector.push_back(keyBindsButton.create(uui::Position(54, 747), "Key Binds", uui::Position(72, 741), "ButtonNormal_TitleScreen"));
 
 	keyBindsButton.getPicture()->connect("MouseEntered", &OptionsState::buttonFocused, &optionsState, "KeyBindsButton");
 	keyBindsButton.getPicture()->connect("MouseLeft", &OptionsState::buttonUnfocused, &optionsState);
@@ -279,16 +290,29 @@ void OptionsState::CreateKeyBindsMenu() {
 
 	menuView.reset(sf::FloatRect(0, 0, 222 * 3, 221 * 3));
 	menuView.setViewport(sf::FloatRect(0.4771f, 0.0926f, 0.4625f, 0.8175f));
+
+	keyBindGUI.setWindow(*windowRef);
 	
 	// Drawing all the text. This text is gotten from our KeyData map and is the 'Key' to each item in the 
 	// map. The text is not going to do anything special however we need to make sure to draw() it to
 	// the view that will be used for the keybinds as we need to be able to scroll this inforamtion up
 	// and down.
 
-	float xPos{ 53 * 3 };
-	float yPosIncrement{ 0 };
+	// We also need to create the buttons that will sit beside the text, this button will display the 
+	// currently bound key that is also retrieved from our KeyData map, however this information will be 
+	// pulled from the user's key binds rather than the default key binds.
+
+	float xPosText{ 53 * 3 };
+	float yPosIncrementText{ 0 };
+
+	float xPosButton = 123 * 3;
+	float xPosButtonText = 169 * 3;
+	float yPosIncrementButton =  2 * 3;
+	int buttonNo{ 0 };
 
 	for (auto key : KeyBindings::Instance()->GetDefaultKeys()) {
+
+		// Creating action name text
 
 		sf::Text sfText;
 
@@ -296,14 +320,101 @@ void OptionsState::CreateKeyBindsMenu() {
 		sfText.setCharacterSize(24);
 		sfText.setFillColor(sf::Color(204, 204, 204));
 		sfText.setString(key.first);
-		sfText.setPosition(xPos - (sfText.getLocalBounds().width / 2), yPosIncrement);
+		sfText.setPosition(xPosText - (sfText.getLocalBounds().width / 2), yPosIncrementText);
 
-		yPosIncrement += 10 * 3;
+		
 
 		textVectorKeyBind.push_back(sfText);
+
+		// Creating key bind display button
+
+		uui::TitleScreenButton uuiButton;
+		uuiButton.setIndex((unsigned int)textVectorKeyBind.size(), (unsigned int)buttonMapKeyBind.size());
+
+		std::string buttonName{ "KeyBind" + std::to_string(buttonNo) };
+		textVectorKeyBind.push_back(uuiButton.create(uui::Position(xPosButton, yPosIncrementButton), key.second.codeString, uui::Position(xPosButtonText, yPosIncrementText), "ButtonNormal_KeyBinds"));
+		
+		textVectorKeyBind[uuiButton.getTextID()].setPosition(xPosButtonText - (textVectorKeyBind[uuiButton.getTextID()].getLocalBounds().width / 2), yPosIncrementText);
+
+		uuiButton.getPicture()->connect("MouseEntered", &OptionsState::keyBindFocused, &optionsState, buttonName);
+		uuiButton.getPicture()->connect("MouseLeft", &OptionsState::keyBindUnfocused, &optionsState);
+		uuiButton.getPicture()->connect("Clicked", &OptionsState::keyBindSelected, &optionsState, buttonName);
+
+		keyBindGUI.add(uuiButton.getPicture(), buttonName);
+		buttonMapKeyBind[buttonName] = uuiButton;
+
+		yPosIncrementText += 10 * 3;
+		yPosIncrementButton += 10 * 3;
+		buttonNo++;
 
 	}
 
 	isMenuOpen = true;
 	currentlyOpenedMenu = KeyBind;
+
+}
+
+void OptionsState::keyBindFocused(std::string buttonName) {
+
+	if (isFocusingKeyBind && currentlyFocusedButton == buttonName) {
+		return;
+	}
+
+	if (isSelectingKeyBind && currentlySelectedKeyBind == buttonName) {
+		return;
+	}
+
+	if (isFocusingKeyBind) {
+		keyBindUnfocused();
+	}
+
+	keyBindGUI.get<tgui::Picture>(buttonName)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonHover_KeyBinds"));
+
+	textVectorKeyBind[buttonMapKeyBind[buttonName].getTextID()].setFillColor(sf::Color(51, 51, 51));
+
+	isFocusingKeyBind = true;
+	currentlyFocusedButton = buttonName;
+	currentlyFocusedKeyBind = buttonName;
+
+}
+
+void OptionsState::keyBindUnfocused() {
+
+	if (isSelectingKeyBind && currentlySelectedKeyBind == currentlyFocusedKeyBind) {
+		return;
+	}
+
+	textVectorKeyBind[buttonMapKeyBind[currentlyFocusedKeyBind].getTextID()].setFillColor(sf::Color(204, 204, 204));
+
+	keyBindGUI.get<tgui::Picture>(currentlyFocusedKeyBind)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonNormal_KeyBinds"));
+
+	isFocusingKeyBind = false;
+
+}
+
+void OptionsState::keyBindSelected(std::string buttonName) {
+
+	if (isSelectingKeyBind && currentlySelectedKeyBind == buttonName) {
+		return;
+	}
+
+	if (isSelectingKeyBind) {
+		keyBindUnselected();
+	}
+
+	keyBindGUI.get<tgui::Picture>(buttonName)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonSelected_KeyBinds"));
+
+	isSelectingKeyBind = true;
+	currentlySelectedKeyBind = buttonName;
+
+}
+
+void OptionsState::keyBindUnselected() {
+
+	keyBindGUI.get<tgui::Picture>(currentlySelectedKeyBind)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonNormal_KeyBinds"));
+
+	textVectorKeyBind[buttonMapKeyBind[currentlySelectedKeyBind].getTextID()].setFillColor(sf::Color(204, 204, 204));
+
+	isSelectingKeyBind = false;
+
 }

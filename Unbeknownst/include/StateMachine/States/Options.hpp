@@ -76,8 +76,20 @@ class OptionsState {
 
 		// Key Binds Menu
 
+		bool isFocusingKeyBind{ false };
+		std::string currentlyFocusedKeyBind{ " " };
+		bool isSelectingKeyBind{ false };
+		std::string  currentlySelectedKeyBind{ " " };
+
+		tgui::Gui keyBindGUI;
+
 		std::vector<sf::Text> textVectorKeyBind;
 		std::unordered_map<std::string, uui::TitleScreenButton> buttonMapKeyBind;
+
+		void keyBindFocused(std::string buttonName);
+		void keyBindUnfocused();
+		void keyBindSelected(std::string buttonName);
+		void keyBindUnselected();
 
 		void CreateKeyBindsMenu();
 		

@@ -10,7 +10,7 @@ namespace uui {
 		public:
 
 			TitleScreenButton() {}
-			sf::Text create(Position buttonPosition, std::string text, Position textPosition);
+			sf::Text create(Position buttonPosition, std::string text, Position textPosition, std::string defaultTexture);
 
 			const tgui::Picture::Ptr getPicture() { return tguiPicture; }
 
@@ -40,11 +40,3 @@ namespace uui {
 	};
 
 }
-
-// Rework is almost complete, the mouse events are working as intended. Now I just need to 
-// create functions in the TitleScreenState that handle keyboard events, this is where the 
-// nextButton strings come into play as we can get the button we have selected through the 
-// vector by using the currentlySelectedButton id. 
-// Once we have the button we can get it's Up Down Left and Right strings that can be used
-// here GuiRef->get(string) to alter the new button we want to select. The Text ID is the same
-// as the Button ID so that shouldn't be a problem when altering the text.

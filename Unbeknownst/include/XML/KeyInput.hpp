@@ -16,9 +16,14 @@
 // are not directly stored with in the KeyData struct instead they are used as the 'Key' value of the 
 // std::unordered_map used to store our KeyData.
 
+// Lastly there is the string that is taken directly from the XML file. The only purpose this has is when
+// we need to display the key bindings to the user, for example in the key bindings option menu, as we can't
+// convert the enum to be used with SFML to be displayed as text on the screen.
+
 struct KeyData {
 	sf::Keyboard::Key keyCode;
 	sf::Mouse::Button mouseButton;
+	std::string codeString;
 };
 
 static bool CompareKey(KeyData k, sf::Keyboard::Key e) {

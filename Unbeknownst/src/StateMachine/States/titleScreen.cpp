@@ -17,11 +17,18 @@ void TitleScreenState::Initialise(sf::RenderWindow* window, tgui::Gui* gui, Stat
 
 	titleScreenWidgets.loadFromFile("images/TitleScreen_Theme.png");
 
-	sf::Texture buttonNormal = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 2, 55, 7));
-	uui::ResourceManager::Instance()->addTexture("ButtonNormal", buttonNormal);
-	sf::Texture buttonHover = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 11, 55, 7));
-	uui::ResourceManager::Instance()->addTexture("ButtonHover", buttonHover);
+	sf::Texture buttonNormal_TS = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 2, 55, 7));
+	uui::ResourceManager::Instance()->addTexture("ButtonNormal_TitleScreen", buttonNormal_TS);
+	sf::Texture buttonHover_TS = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 11, 55, 7));
+	uui::ResourceManager::Instance()->addTexture("ButtonHover_TitleScreen", buttonHover_TS);
 
+	sf::Texture buttonNormal_KB = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 20, 95, 7));
+	uui::ResourceManager::Instance()->addTexture("ButtonNormal_KeyBinds", buttonNormal_KB);
+	sf::Texture buttonHover_KB = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 29, 95, 7));
+	uui::ResourceManager::Instance()->addTexture("ButtonHover_KeyBinds", buttonHover_KB);
+	sf::Texture buttonSelected_KB = uui::Texture::create(titleScreenWidgets, sf::IntRect(2, 38, 95, 7));
+	uui::ResourceManager::Instance()->addTexture("ButtonSelected_KeyBinds", buttonSelected_KB);
+	
 	CreateButtons(machine);
 
 }
@@ -209,7 +216,7 @@ void TitleScreenState::buttonFocused(std::string buttonName) {
 		buttonUnfocused();
 	}
 	
-	guiRef->get<tgui::Picture>(buttonName)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonHover"));
+	guiRef->get<tgui::Picture>(buttonName)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonHover_TitleScreen"));
 
 	textVector[buttonMap[buttonName].getTextID()].setFillColor(sf::Color(51, 51, 51));
 	textVector[buttonMap[buttonName].getTextID()].move(9, 0);
@@ -222,7 +229,7 @@ void TitleScreenState::buttonUnfocused() {
 	textVector[buttonMap[currentlyFocusedButton].getTextID()].setFillColor(sf::Color(204, 204, 204));
 	textVector[buttonMap[currentlyFocusedButton].getTextID()].move(-9, 0);
 
-	guiRef->get<tgui::Picture>(currentlyFocusedButton)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonNormal"));
+	guiRef->get<tgui::Picture>(currentlyFocusedButton)->setTexture(uui::ResourceManager::Instance()->getTexture("ButtonNormal_TitleScreen"));
 
 	isFocusingButton = false;
 }
@@ -324,7 +331,7 @@ void TitleScreenState::CreateButtons(StateMachine* machine) {
 	
 	uui::TitleScreenButton newgameButton;
 	newgameButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(newgameButton.create(uui::Position(54, 663), "New Game", uui::Position(72, 657)));
+	textVector.push_back(newgameButton.create(uui::Position(54, 663), "New Game", uui::Position(72, 657), "ButtonNormal_TitleScreen"));
 
 	newgameButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "NewGameButton");
 	newgameButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
@@ -338,7 +345,7 @@ void TitleScreenState::CreateButtons(StateMachine* machine) {
 
 	uui::TitleScreenButton continueButton;
 	continueButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(continueButton.create(uui::Position(54, 684), "Continue", uui::Position(72, 678)));
+	textVector.push_back(continueButton.create(uui::Position(54, 684), "Continue", uui::Position(72, 678), "ButtonNormal_TitleScreen"));
 
 	continueButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "ContinueButton");
 	continueButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
@@ -352,7 +359,7 @@ void TitleScreenState::CreateButtons(StateMachine* machine) {
 
 	uui::TitleScreenButton loadgameButton;
 	loadgameButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(loadgameButton.create(uui::Position(54, 705), "Load Game", uui::Position(72, 699)));
+	textVector.push_back(loadgameButton.create(uui::Position(54, 705), "Load Game", uui::Position(72, 699), "ButtonNormal_TitleScreen"));
 
 	loadgameButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "LoadGameButton");
 	loadgameButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
@@ -366,7 +373,7 @@ void TitleScreenState::CreateButtons(StateMachine* machine) {
 
 	uui::TitleScreenButton extrasButton;
 	extrasButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(extrasButton.create(uui::Position(54, 726), "Extras", uui::Position(72, 720)));
+	textVector.push_back(extrasButton.create(uui::Position(54, 726), "Extras", uui::Position(72, 720), "ButtonNormal_TitleScreen"));
 
 	extrasButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "ExtrasButton");
 	extrasButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);
@@ -380,7 +387,7 @@ void TitleScreenState::CreateButtons(StateMachine* machine) {
 
 	uui::TitleScreenButton optionsButton;
 	optionsButton.setIndex((unsigned int)textVector.size(), (unsigned int)buttonMap.size());
-	textVector.push_back(optionsButton.create(uui::Position(54, 747), "Options", uui::Position(72, 741)));
+	textVector.push_back(optionsButton.create(uui::Position(54, 747), "Options", uui::Position(72, 741), "ButtonNormal_TitleScreen"));
 
 	optionsButton.getPicture()->connect("MouseEntered", &TitleScreenState::buttonFocused, &titleScreen, "OptionsButton");
 	optionsButton.getPicture()->connect("MouseLeft", &TitleScreenState::buttonUnfocused, &titleScreen);

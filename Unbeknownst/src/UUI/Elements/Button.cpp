@@ -3,8 +3,8 @@
 
 namespace uui {
 
-	sf::Text TitleScreenButton::create(Position buttonPosition, std::string text, Position textPosition) {
-		tguiPicture = tguiPicture->create(uui::ResourceManager::Instance()->getTexture("ButtonNormal"));
+	sf::Text TitleScreenButton::create(Position buttonPosition, std::string text, Position textPosition, std::string defaultTexture) {
+		tguiPicture = tguiPicture->create(uui::ResourceManager::Instance()->getTexture(defaultTexture));
 		tguiPicture->setPosition(buttonPosition.x, buttonPosition.y);
 		tguiPicture->scale(3, 3);
 		

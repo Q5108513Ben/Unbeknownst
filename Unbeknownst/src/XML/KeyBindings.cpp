@@ -98,6 +98,10 @@ void KeyBindings::ParseKey(KeyData& key, std::string input, std::string keycode)
 	// to figure out that the "E" string within the XML file means we need our instance of
 	// KeyData to store the "sf::Keyboard::E" enum for use with SFML's event system.
 
+	// Storing keycode
+
+	key.codeString = keycode;
+
 	// Keyboard Input
 
 	if (input == "Keyboard") {
